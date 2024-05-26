@@ -1,6 +1,6 @@
 import pygame
 import random
-import os
+import numpy as np
 FPS = 60
 WIDTH  = 500 
 HEIGHT = 600  
@@ -28,9 +28,10 @@ def draw_text(surf, text, size, x, y):
     surf.blit(text_surface, text_rect)
 
 #烤布雷
-
 Bomb = [[0]*10 for i in range(10)]#地雷本盤
 show_Bomb = [[0]*10 for i in range(10)]#顯示地雷盤
+detect_floor = [[0]*10 for i in range(10)]#偵測盤
+draw = []
 count = 0
 #烤布雷
 while(count <= 10):
@@ -39,11 +40,23 @@ while(count <= 10):
     if Bomb[x][y] == 0:
         Bomb[x][y] = 1
         count += 1
+for i in range(10):
+    for j in range(10):
+        show_Bomb[i][j] = False
+count = 0
 def detect_Bomb(x,y):#創韓式烤布雷
-    count = 0
+    if x < 0:
+        x = 0
+    if x > 9:
+        x = 9
+    if y < 0:
+        y = 0
+    if y > 9:
+        y = 9
     if Bomb[x][y] == 1:
-        return False
-    else:
+        running = False
+        return running
+    elif show_Bomb[x][y] == -1:
         for i in range(-1,2):
             for j in range(-1,2):
                 x1 = x+i
@@ -51,34 +64,32 @@ def detect_Bomb(x,y):#創韓式烤布雷
                 if x1 >= 0 and x1 <= 9 and y1 >= 0 and y1 <= 9:
                     if Bomb[x1][y1] == 1:
                         count += 1
-        #check = bool(1)
         if count >= 1:
             show_Bomb[x][y] = count  #顯示地雷數
-            count = int(count)
-            draw_text(screen,count,30,50*x+10,50*y+10)
+            draw.add(show_Bomb[x][y])
         else:
+            show_Bomb[x][y] = 0
             for a in range(-1,2):
                 for b in range(-1,2):
-                    detect_Bomb(x+a,y+b,0)
-        return True
+                    detect_Bomb(x+a,y+b)
+        return count
+    detect_floor[x][y] = True
+
 def draw_Bomb(surf, x, y):#畫烤布雷的底盤
     BAR_LENGTH = 50
     BAR_HEIGHT = 50
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)#定義外框
     pygame.draw.rect(surf, BLACK, outline_rect, 2)#畫外框
-def get_Bomb(x,y,mouse_press):#偵測勞贖吃烤布雷
-    if y >= 100:
-        x = int(mouse_x / 50)
-        y = int(mouse_y / 50)
-    if mouse_press == (1,0,0):
-        detect_Bomb(x,y)
+
+
+
 #迴圈
 running = True
 
 while running:
     clock.tick(FPS)
     mouse_x,mouse_y = pygame.mouse.get_pos()
-    mouse_press = pygame.mouse.get_pressed(num_buttons=3)
+    mouse_press = pygame.mouse.get_pressed()
     #取得輸入
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -88,11 +99,21 @@ while running:
     for size_x in range(10):
         for  size_y in range(10):
             draw_Bomb(screen,50 * size_x,100 +  50 * size_y)
-    get_Bomb(mouse_x,mouse_y,mouse_press)
+    if mouse_y > 100:
+        if mouse_press == (True,False,False):
+            x_new = int(mouse_x / 50)
+            y_new = int(mouse_y / 50)
+            if detect_floor[x_new][y_new] == 0:   
+                detect_Bomb(x_new,y_new)
+    for i in range(10):
+        for j in range(10):
+            draw_text(screen,str(draw[i][j]),30,50*i+10,100+50*j+10)
+
     draw_text(screen, str(mouse_x),18,WIDTH/2,10)
     draw_text(screen, str(mouse_y),18,WIDTH/2+25,10)
-    #draw_text(screen, str(mouse_press),18,WIDTH/2,28)
+    draw_text(screen, str(mouse_press),18,WIDTH/2,28)
 
     pygame.display.update()
-draw_text(screen,str("GAME OVER"),40,WIDTH/2,HEIGHT/2)
+while running == 0:
+    draw_text(screen,str("GAME OVER"),40,WIDTH/2,HEIGHT/2) 
 #pygame.quit() 
