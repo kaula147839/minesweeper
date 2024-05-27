@@ -67,14 +67,13 @@ def detect_Bomb(x,y):#創韓式烤布雷
                         count += 1
         if count >= 1:
             show_Bomb[x][y] = count  #顯示地雷數
-            return show_Bomb[x][y]
         else:
             show_Bomb[x][y] = 0
             for a in range(-1,2):
                 for b in range(-1,2):
                     detect_Bomb(x+a,y+b)
         detect_floor[x][y] = True
-        return detect_floor[x][y]
+    return show_Bomb[x][y],detect_floor[x][y]
 
 def draw_Bomb(surf, x, y):#畫烤布雷的底盤
     BAR_LENGTH = 50
@@ -94,13 +93,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif pygame.mouse.get_pressed(num_buttons=3)[0] == True:
-            if mouse_y > 100:
+            # if mouse_y > 100:
                 x_new = int(mouse_x / 50)
                 y_new = int((mouse_y-100) / 50)
                 x_new,y_new = limit(x_new,y_new)
                 if detect_floor[x_new][y_new] == 0:   
                     detect_Bomb(x_new,y_new)
-                    show_Bomb[:][:],detect_floor[:][:] = (detect_Bomb(x_new,y_new))
+                    show_Bomb[x_new][y_new],detect_floor[x_new][y_new] = (detect_Bomb(x_new,y_new))
                           
     #畫面顯示
     screen.fill(WHITE)
