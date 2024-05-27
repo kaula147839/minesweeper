@@ -1,6 +1,5 @@
 import pygame
 import random
-import numpy as np
 FPS = 60
 WIDTH  = 500 
 HEIGHT = 600  
@@ -34,6 +33,16 @@ detect_floor = [[0]*10 for i in range(10)]#偵測盤
 draw = []
 count = 0
 #烤布雷
+def limit(x,y):#限制範圍min:0,max:9
+    if x < 0:
+        x = 0
+    if x > 9:
+        x = 9
+    if y < 0:
+        y = 0
+    if y > 9:
+        y = 9
+    return x,y
 while(count <= 10):
     x = int (random.randrange(0,10))
     y = int (random.randrange(0,10))
@@ -45,17 +54,10 @@ for i in range(10):
         show_Bomb[i][j] = False
 count = 0
 def detect_Bomb(x,y):#創韓式烤布雷
-    if x < 0:
-        x = 0
-    if x > 9:
-        x = 9
-    if y < 0:
-        y = 0
-    if y > 9:
-        y = 9
+    x,y = limit(x,y)
     if Bomb[x][y] == 1:
         running = False
-        return running
+        #return running
     elif show_Bomb[x][y] == -1:
         for i in range(-1,2):
             for j in range(-1,2):
@@ -67,12 +69,12 @@ def detect_Bomb(x,y):#創韓式烤布雷
         if count >= 1:
             show_Bomb[x][y] = count  #顯示地雷數
             draw.add(show_Bomb[x][y])
+            return draw[:],x,y
         else:
             show_Bomb[x][y] = 0
             for a in range(-1,2):
                 for b in range(-1,2):
                     detect_Bomb(x+a,y+b)
-        return count
     detect_floor[x][y] = True
 
 def draw_Bomb(surf, x, y):#畫烤布雷的底盤
@@ -100,14 +102,13 @@ while running:
         for  size_y in range(10):
             draw_Bomb(screen,50 * size_x,100 +  50 * size_y)
     if mouse_y > 100:
+        x_new = int(mouse_x / 50)
+        y_new = int((mouse_y-100) / 50)
+        x_new,y_new = limit(x_new,y_new)
         if mouse_press == (True,False,False):
-            x_new = int(mouse_x / 50)
-            y_new = int(mouse_y / 50)
             if detect_floor[x_new][y_new] == 0:   
                 detect_Bomb(x_new,y_new)
-    for i in range(10):
-        for j in range(10):
-            draw_text(screen,str(draw[i][j]),30,50*i+10,100+50*j+10)
+        draw_text(screen,str(draw[x_new][y_new]),30,50*x_new+10,100+50*y_new+10)
 
     draw_text(screen, str(mouse_x),18,WIDTH/2,10)
     draw_text(screen, str(mouse_y),18,WIDTH/2+25,10)
