@@ -51,29 +51,28 @@ while(count <= 10):
 for i in range(10):
     for j in range(10):
         show_Bomb[i][j] = 0
+        detect_floor[i][j] = False
 count = 0
-def detect_Bomb(x,y):#創韓式烤布雷
-    x,y = limit(x,y)
-    if Bomb[x][y] == 1:
-        running = False
-        #return running
-    elif show_Bomb[x][y] == -1:
-        for i in range(-1,2):
-            for j in range(-1,2):
-                x1 = x+i
-                y1 = y+j
-                if x1 >= 0 and x1 <= 9 and y1 >= 0 and y1 <= 9:
-                    if Bomb[x1][y1] == 1:
-                        count += 1
+def detect_Bomb(x, y):
+    global count  # 添加這行
+    count = 0  # 重置 count 變量
+    x, y = limit(x, y)
+    if detect_floor[x][y] == False:
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                x1 = x + i
+                y1 = y + j
+                if x1 >= 0 and x1 <= 9 and y1 >= 0 and y1 <= 9 and Bomb[x1][y1] == 1:
+                    count += 1
         if count >= 1:
-            show_Bomb[x][y] = count  #顯示地雷數
+            show_Bomb[x][y] = count
         else:
             show_Bomb[x][y] = 0
-            for a in range(-1,2):
-                for b in range(-1,2):
-                    detect_Bomb(x+a,y+b)
+            for a in range(-1, 2):
+                for b in range(-1, 2):
+                    detect_Bomb(x + a, y + b)
         detect_floor[x][y] = True
-    return show_Bomb[x][y],detect_floor[x][y]
+    return show_Bomb[x][y], detect_floor[x][y]
 
 def draw_Bomb(surf, x, y):#畫烤布雷的底盤
     BAR_LENGTH = 50
@@ -94,10 +93,10 @@ while running:
             running = False
         elif pygame.mouse.get_pressed(num_buttons=3)[0] == True:
             # if mouse_y > 100:
-                x_new = int(mouse_x / 50)
-                y_new = int((mouse_y-100) / 50)
-                x_new,y_new = limit(x_new,y_new)
-                if detect_floor[x_new][y_new] == 0:   
+            x_new = int(mouse_x / 50)
+            y_new = int((mouse_y-100) / 50)
+            x_new,y_new = limit(x_new,y_new)
+            if detect_floor[x_new][y_new] == 0:   
                     detect_Bomb(x_new,y_new)
                     show_Bomb[x_new][y_new],detect_floor[x_new][y_new] = (detect_Bomb(x_new,y_new))
                           
