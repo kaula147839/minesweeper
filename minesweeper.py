@@ -26,20 +26,20 @@ def draw_text(surf, text, size, x, y):
     text_rect.top = y
     surf.blit(text_surface, text_rect)
 
-#烤布雷
-def draw_game_over(surf):
+#韓式烤布蕾
+def draw_game_over(surf):#畫布丁輸
     surf.fill(WHITE)
     draw_text(surf, "GAME OVER", 50, WIDTH // 2, HEIGHT // 2 - 50)
     draw_text(surf, "Press R to Restart or Q to Quit", 30, WIDTH // 2, HEIGHT // 2 + 10)
     pygame.display.update()
 
-def draw_victory(surf):
+def draw_victory(surf):#畫烤布蕾贏
     surf.fill(WHITE)
     draw_text(surf, "YOU WIN", 50, WIDTH // 2, HEIGHT // 2 - 50)
     draw_text(surf, "Press R to Restart or Q to Quit", 30, WIDTH // 2, HEIGHT // 2 + 10)
     pygame.display.update()
-
-def reset():    
+#重吃一盤烤布蕾
+def reset():
     global Bomb,show_Bomb,detect_floor,flags,count,game_over,victory
     Bomb = [[0]*10 for i in range(10)]#地雷本盤
     show_Bomb =[[0]*10 for i in range(10)]#顯示地雷盤
@@ -57,7 +57,6 @@ def reset():
 
 num_Bomb = 10
 reset()
-#烤布雷
 def xy_change(x,y):
     x_new = int(x / 50)
     y_new = int((y-100) / 50)
@@ -66,10 +65,9 @@ def xy_change(x,y):
 
 def limit(x,y):#限制範圍min:0,max:9
     return max(0, min(9, x)), max(0, min(9, y))
-
+#主菜布蕾
 def detect_Bomb(x, y):
-    global game_over#,count
-    # count = 0
+    global game_over
     stack = [(x, y)]  # 使用堆疊來模擬遞迴
     while stack:
         x, y = stack.pop()
@@ -101,7 +99,7 @@ def detect_Bomb(x, y):
     check_victory()
     return show_Bomb[x][y], detect_floor[x][y]
 
-
+#勝利烤布蕾
 def check_victory():
     global victory
     for i in range(10):
@@ -110,13 +108,13 @@ def check_victory():
                 return
     victory = True
 
-def draw_Bomb(surf, x, y):#畫烤布雷的底盤
+def draw_Bomb(surf, x, y):#畫烤布蕾的盤子
     BAR_LENGTH = 50
     BAR_HEIGHT = 50
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)#定義外框
     pygame.draw.rect(surf, BLACK, outline_rect, 2)#畫外框
 
-#迴圈
+#吃烤布蕾
 running = True
 game_over = False
 while running:
