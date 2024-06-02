@@ -74,9 +74,12 @@ def detect_Bomb(x, y):
             for i in range(-1, 2):
                 for j in range(-1, 2):
                     if (i != 0 or j!= 0) :
-                        x1,y1 = limit(x+i,y+j)
-                        if Bomb[x1][y1]:
-                            count += 1
+                        x1 = x+i
+                        y1 = y+j
+                        # x1,y1 = limit(x+i,y+j)
+                        if 0 <= x1 <= 9 and 0 <= y1 <= 9:
+                            if Bomb[x1][y1]:
+                                count += 1
             if count >= 1:
                 show_Bomb[x][y] = count
             else:
@@ -95,8 +98,6 @@ def draw_Bomb(surf, x, y):#畫烤布雷的底盤
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)#定義外框
     pygame.draw.rect(surf, BLACK, outline_rect, 2)#畫外框
 
-
-
 #迴圈
 running = True
 game_over = False
@@ -112,15 +113,16 @@ while running:
                     reset()
                 elif event.key == pygame.K_q:
                     running = False
-        elif not game_over and pygame.mouse.get_pressed(num_buttons=3)[0] == True:
-            x_new,y_new = xy_change(mouse_x,mouse_y)
-            if detect_floor[x_new][y_new] == 0 and not flags[x_new][y_new]:   
-                    detect_Bomb(x_new,y_new)
-                    show_Bomb[x_new][y_new],detect_floor[x_new][y_new] = (detect_Bomb(x_new,y_new))
-        elif not game_over and  pygame.mouse.get_pressed(num_buttons=3)[2] == True:
-            x_new,y_new = xy_change(mouse_x,mouse_y)
-            if not detect_floor[x_new][y_new]:
-                flags[x_new][y_new] = not flags[x_new][y_new]
+        elif not game_over and event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                x_new,y_new = xy_change(mouse_x,mouse_y)
+                if detect_floor[x_new][y_new] == 0 and not flags[x_new][y_new]:   
+                        detect_Bomb(x_new,y_new)
+                        show_Bomb[x_new][y_new],detect_floor[x_new][y_new] = (detect_Bomb(x_new,y_new))
+            elif event.button == 3: 
+                x_new,y_new = xy_change(mouse_x,mouse_y)
+                if not detect_floor[x_new][y_new]:
+                    flags[x_new][y_new] = not flags[x_new][y_new]
                           
     #畫面顯示
     if not game_over:
