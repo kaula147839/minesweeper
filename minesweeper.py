@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 FPS = 60
 WIDTH  = 500 
 HEIGHT = 600  
@@ -13,7 +14,9 @@ BLACK = (0,0,0)
 #遊戲初始化 創視窗
 pygame.init()
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
-pygame.display.set_caption("minesweeper")
+pygame.display.set_caption("踩踩踩踩跟我踩")
+minesweeper_img = pygame.image.load(os.path.join("img", "地雷.jpg")).convert()
+pygame.display.set_icon(minesweeper_img)
 clock = pygame.time.Clock()
 
 #寫字
@@ -107,8 +110,8 @@ def check_victory():
             if not detect_floor[i][j] and Bomb[i][j] == 0:
                 return
     victory = True
-
-def draw_Bomb(surf, x, y):#畫烤布蕾的盤子
+#畫烤布蕾的盤子
+def draw_Bomb(surf, x, y):
     BAR_LENGTH = 50
     BAR_HEIGHT = 50
     outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)#定義外框
