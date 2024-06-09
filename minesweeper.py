@@ -60,6 +60,7 @@ def reset():  # 重新一局
 
 num_Bomb = 10  # 想玩的總地雷數
 reset()
+
 def xy_change(x,y):  # 這個是方便把滑鼠的位置變成格子的xy
     x_new = int(x / 50)
     y_new = int((y-100) / 50)
@@ -70,7 +71,7 @@ def limit(x,y):  # 限制範圍min:0,max:9
     return max(0, min(9, x)), max(0, min(9, y))
 
 def detect_Bomb(x, y):  # 偵測的函式
-    global game_over
+    global game_over  # 把這變成全域變數
     stack = [(x, y)]  # 使用堆疊來模擬遞迴
     while stack:
         x, y = stack.pop()  # 把xy從堆疊的最上面拿出來
