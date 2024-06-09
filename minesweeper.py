@@ -43,7 +43,7 @@ def draw_victory(surf):  # 贏了要顯示的東西
 
 def reset():  # 重新一局
     global Bomb,show_Bomb,detect_floor,flags,count,game_over,victory  # 把這些變數變成全域變數
-# [[0]*10 for i in range(10)]是一個二維陣列,[0]*10 for i in range(10)這個的意思是把每一格都變成0
+    # [[0]*10 for i in range(10)]是一個二維陣列,[0]*10 for i in range(10)這個的意思是把每一格都變成0
     Bomb = [[0]*10 for i in range(10)]  # 地雷盤
     show_Bomb =[[0]*10 for i in range(10)]  # 顯示數字的盤
     detect_floor = [[False]*10 for i in range(10)]  # 判斷有沒有被點過的盤
